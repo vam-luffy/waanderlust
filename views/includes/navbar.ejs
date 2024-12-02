@@ -1,0 +1,125 @@
+<style>
+  .btn-search{
+    background-color:#fe424d;
+    color: white;
+    border-radius: 25px;
+    
+  }
+  .btn-search:hover{
+    background-color:#fe424d;
+    
+  }
+  button.btn.btn-search {
+    display: inherit;
+  }
+  .btn-search i{
+    position: relative;
+    top: 5px;
+    right: 5px;
+  }
+  .search-input{
+    border-radius: 25px;
+    padding: 0.5rem 3rem 0.5rem 3rem;
+    font-size: 0.8rem;
+  }
+</style>
+
+<nav class="navbar navbar-expand-md navbar-light bg-light border-bottom sticky-top">
+  <div class="container-fluid">
+      <a class="navbar-brand" href="/listings">
+          <i class="fa-regular fa-compass fa-lg"></i> 
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav left-nav me-auto custom-left-nav">  <!-- Apply custom class for more left movement -->
+              
+              <a class="nav-link" href="/listings" id="listings-link">Explore</a>
+              
+          </div>
+          <div class="navbar-nav ms-auto">
+            <form class="d-flex" role="search">
+              <input class="form-control me-2 search-input" type="search" placeholder="Search destinations" aria-label="Search">
+              <button class="btn btn-search" type="submit"> <i class="fa-solid fa-magnifying-glass"></i> Search</button>
+            </form>
+          </div>
+          <div class="navbar-nav ms-auto"> 
+            <a class="nav-link" href="/listings/new" id="newlisting-link">Airbnb Your Home</a>
+            <% if (!currentUser) { %>
+              <a class="nav-link" href="/signup" id="signup-link"> <b>Signup</b> </a>
+              <a class="nav-link" href="/login" id="login-link"> <b>Login</b> </a>
+            <% } %>
+            <% if (currentUser) { %>
+                <a class="nav-link" href="/logout" id="logout-link">Logout</a>
+            <% } %>
+          </div>
+      </div>
+  </div>
+</nav>
+
+<script>
+  // Highlight active link based on current page
+  const path = window.location.pathname;
+  if (path === '/') {
+      document.getElementById('home-link').classList.add('active');
+  } else if (path === '/listings') {
+      document.getElementById('listings-link').classList.add('active');
+  } else if (path === '/listings/new') {
+      document.getElementById('newlisting-link').classList.add('active');
+  }
+</script>
+
+<!-- Custom CSS -->
+<style>
+  /* Remove any active or focus state for the hamburger button */
+  .navbar-toggler:focus {
+    outline: none; /* Remove the default outline */
+    box-shadow: none; /* Remove focus box shadow */
+  }
+
+  /* Remove the 'collapsed' class active state color change */
+  .navbar-toggler.collapsed {
+    background-color: transparent; /* Ensure no color change when collapsed */
+  }
+
+  /* Optional: If you want the navbar items to be clearly visible and contrast well */
+  .navbar-nav .nav-link {
+    color: #333; /* Dark text color for better visibility */
+  }
+
+  /* Optional: If you want to highlight active links (not the hamburger) */
+  .navbar-nav .nav-link.active {
+    color: #007bff; /* Active link color */
+  }
+
+  /* Navbar background color when expanded */
+  .navbar-collapse {
+    background-color: rgba(255, 255, 255, 0.9); /* Adjust dropdown background color */
+  }
+
+  /* Optional: Navbar items background color on hover */
+  .navbar-nav .nav-link:hover {
+    background-color: #bebebe; /* Light background on hover */
+  }
+
+  /* Customize the navbar-toggler icon color */
+  .navbar-toggler-icon {
+    background-color: transparent; /* Adjust the hamburger icon color */
+  }
+
+  /* Custom Class to move navbar to the left more */
+  .custom-left-nav {
+    margin-left: -20px;  /* Negative margin to push the navbar items further left */
+  }
+  a#signup-link {
+    margin-left: -12px;
+  }
+  a#login-link {
+    margin-left: -10px;
+  }
+  a#logout-link {
+    margin-left: -9px;
+}
+
+</style>

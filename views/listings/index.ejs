@@ -1,0 +1,125 @@
+<% layout('/layouts/boilerplate') -%>
+<style>
+    .card{
+        border: none;
+    }
+    #filters{
+        display: flex;
+        flex-wrap:wrap ;
+        align-items: center;
+    }
+    .filter{
+        text-align: center;
+        margin-right: 2rem;
+        margin-top: 2rem;
+        opacity: 0.7;
+    }
+    .filter:hover{
+        opacity: 1;
+        cursor: pointer;
+    }
+    .filter p{
+        font-size: 0.8rem;
+    }
+    .tax-info{
+        display: none;
+    }
+    .tax-switch{
+        border:1px solid black;
+        border-radius: 1rem;
+        height: 3.25rem;
+        padding: 1rem;
+        margin-left: 5rem;
+        display: flex;
+        align-items: center;
+    }
+</style>
+
+    <div id="filters">
+        <div class="filter">
+            <div><i class="fa-solid fa-fire"></i></div>
+            <p>Trending</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-bed"></i></div>
+            <p>Rooms</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-building"></i></div>
+            <p>Iconic cities</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-mountain"></i></div>
+            <p>Moutains</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-brands fa-fort-awesome"></i></div>
+            <p>Castles</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-snowflake"></i></div>
+            <p>Arctic</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-tents"></i></div>
+            <p>Camping</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-cow"></i></div>
+            <p>Farms</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-tents"></i></div>
+            <p>Camping</p>
+        </div>
+        <div class="filter">
+            <div><i class="fa-solid fa-cow"></i></div>
+            <p>Farms</p>
+        </div>
+        <div class="tax-switch">
+            <div class="form-check-reverse form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                <label class="form-check-label" for="flexSwitchCheckDefault">Display Total after Taxes</label>
+              </div>
+        </div>
+    </div>
+    <div class="container">
+        <!-- Row for the grid system -->
+        <div class="row ">
+            <% for(let listing of allListings){ %>
+                <!-- Each card is in a column that spans 4 columns on large screens, 6 on medium screens, and 12 on small screens -->
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-4 mt-3"> 
+                    <a href="/listings/<%=listing._id%>" class="nav-img text-decoration-none">
+                        <div class=" card lisiting-card">
+                            <!-- Image with a fixed height and object-fit to cover the aspect ratio -->
+                            <img style="height: 20rem; object-fit: cover;" src="<%=listing.image.url%>" class="card-img-top" alt="noimg">
+                            <div class="card-img-overlay">
+                                abcs <!-- Optional overlay text, can be customized -->
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title"><%=listing.title%></h5>
+                                <p class="card-text">
+                                    &#8377; <%= listing.price.toLocaleString("en-IN")%>/night
+                                    <i class="tax-info"> <b>&nbsp; &nbsp; +18% GST</b> </i>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <script>
+        let taxSwitch=document.getElementById('flexSwitchCheckDefault');
+        taxSwitch.addEventListener("click",()=>{
+            let taxInfo = document.getElementsByClassName("tax-info");
+            for(info of taxInfo){
+                if(info.style.display !="inline")
+                info.style.display="inline";
+                else{
+                    info.style.display="none"
+                }
+            }
+        })
+    </script>

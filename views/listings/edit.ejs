@@ -1,0 +1,68 @@
+<% layout('/layouts/boilerplate') -%>
+<body>
+    <!-- Container to center content, use container-fluid for full width -->
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <!-- Column for content, centered and with appropriate width -->
+            <div class="col-12 col-md-10 col-lg-8">
+
+                <!-- Title Section -->
+                <h3 class="text-center mb-4">Edit Listing</h3>
+
+                <!-- Form for editing listing -->
+                <form action="/listings/<%= listing._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                    <!-- Title Field -->
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" name="listing[title]" value="<%= listing.title %>" required>
+                    </div>
+
+                    <!-- Description Field -->
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="listing[description]" required><%= listing.description %></textarea>
+                    </div>
+
+                    <!-- Price Field -->
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Price</label>
+                        <input type="number" class="form-control" id="price" name="listing[price]" value="<%= listing.price %>" required>
+                    </div>
+
+                    <!-- Location Field -->
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" class="form-control" id="location" name="listing[location]" value="<%= listing.location %>" required>
+                    </div>
+
+                    <!-- Country Field -->
+                    <div class="mb-3">
+                        <label for="country" class="form-label">Country</label>
+                        <input type="text" class="form-control" id="country" name="listing[country]" value="<%= listing.country %>" required>
+                    </div>
+
+                    <!-- Original Image Preview Section -->
+                    <div class="mb-3">
+                        <label class="form-label">Original Image</label><br>
+                        <!-- Bootstrap Styling for Image Preview -->
+                        <img src="<%= Listing %>" alt="Original Image" class="img-fluid img-thumbnail" style="max-width: 150px;">
+                    </div>
+
+                    <!-- Image URL Field -->
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Upload New Image</label>
+                        <input 
+                        type="file" 
+                        class="form-control" 
+                        id="image" 
+                        name="listing[image][url]" 
+                        >
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>

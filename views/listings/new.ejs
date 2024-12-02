@@ -1,0 +1,93 @@
+<% layout('/layouts/boilerplate') -%>
+<body>
+    <!-- Container for centering and responsive design -->
+    <div class="container">
+        <div class="row justify-content-center">
+            <!-- Form Column, centered and with appropriate width -->
+            <div class="col-12 col-md-10 col-lg-8">
+                <!-- Form Title -->
+                <h3 class="text-center mb-4">Create a New Listing</h3>
+                
+                <!-- Form Start -->
+                <form action="/listings" method="POST" novalidate class="needs-validation" enctype="multipart/form-data">
+                    
+                    <!-- Title Input Field -->
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input name="listing[title]" id="title" class="form-control" placeholder="Enter title" type="text" required>
+                        <div class="valid-feedback">Title looks good!</div>
+                        <div class="invalid-feedback">Please enter a title.</div>
+                    </div>
+
+                    <!-- Description Input Field -->
+                    <div class="mb-4">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea name="listing[description]" id="description" placeholder="Enter description" class="form-control" rows="5" required></textarea>
+                        <div class="valid-feedback">Description looks good!</div>
+                        <div class="invalid-feedback">Please enter a description.</div>
+                    </div>
+                    
+                    <!-- Image URL Input Field -->
+                    <div class="mb-4">
+                        <label for="image" class="form-label">Upload image</label>
+                        <input class="form-control" name="listing[image][url]" id="image"  type="file">
+                    </div>
+                    
+                    <!-- Price and Country Input Fields -->
+                    <div class="row mb-4">
+                        <div class="mb-3 col-12 col-md-6">
+                            <label for="price" class="form-label">Price</label>
+                            <div class="input-group">
+                                <span class="input-group-text">&#8377;</span>
+                                <input name="listing[price]" id="price" class="form-control" placeholder="Enter price"  min="0" step="100" required>
+                                <div class="valid-feedback">Price looks good!</div>
+                                <div class="invalid-feedback">Please enter a price.</div>
+                            </div>
+
+                        </div>
+                        <div class="mb-3 col-12 col-md-6">
+                            <label for="country" class="form-label">Country</label>
+                            <input name="listing[country]" id="country" class="form-control" placeholder="Enter country" type="text" required>
+                            <div class="valid-feedback">Country looks good!</div>
+                            <div class="invalid-feedback">Please enter a country.</div>
+                        </div>
+                    </div>
+
+                    <!-- Location Input Field -->
+                    <div class="mb-4">
+                        <label for="location" class="form-label">Location</label>
+                        <input name="listing[location]" id="location" class="form-control" placeholder="Enter location" type="text" required>
+                        <div class="valid-feedback">Location looks good!</div>
+                        <div class="invalid-feedback">Please enter a location.</div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary btn-lg" type="submit">Add Listing</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- <script>
+        (() => {
+            'use strict'
+        
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation')
+        
+            // Loop over them and prevent submission
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+        
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+    </script> -->
+</body>

@@ -1,0 +1,49 @@
+const User=require("../models/user.js");
+
+
+
+module.exports.renderSignupForm=(req, res) => {  // Corrected the route path and file name
+    res.render("users/signup.ejs");    // Corrected the file name
+}
+module.exports.signUp=async(req,res)=>{
+    try{
+        let {username,email,password}=req.body;
+        const newUser=new User({username,email});
+        const registeredUser=await User.register(newUser,password);
+        console.log(registeredUser);
+        req.login(registeredUser,(er)=>{
+            if(er){
+                return next(err)
+            }
+            req.flash("success","Rregistered,Wlecome to wanderLust")
+            res.redirect("/listings")
+        })
+
+    }catch(err){
+        req.flash("error",err.message);
+        res.redirect("/signup")
+
+    }
+
+}
+
+module.exports.renderLoginForm=(req,res)=>{
+    res.render("users/login.ejs")
+}
+
+module.exports.login= async(req,res)=>{
+    req.flash("success","wlecome back to wanderlust");
+    let redirectUrl=res.locals.redirectUrl || "/listings"
+    res.redirect(redirectUrl);
+
+}
+
+module.exports.logout=(req, res, next) => {
+    req.logout((err) => {
+        if (err) {
+            return next(err);  // Pass any error to the next middleware (error handler)
+        }
+        req.flash("success", "Logged out successfully!");
+        res.redirect("/listings");  // Redirect only after logout is complete
+    });
+}
