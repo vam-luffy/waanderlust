@@ -98,9 +98,12 @@
                                                     Rated: 3 stars
                                                   </p>
                                             </div>
+                                            <% if (currentUser && currentUser._id.toString() === review.author._id.toString()) { %>
+
                                             <form action="/listings/<%=listings._id%>/reviews/<%=review._id%>?_method=DELETE" class="mt-3" method="POST">
                                                 <button class="btn btn-sm btn-dark">DELETE</button>
                                             </form>
+                                            <% } %>
                                         </div>
                                     </div>
                                 </div>
