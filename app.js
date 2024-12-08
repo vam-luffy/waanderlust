@@ -79,6 +79,12 @@ if (process.env.NODE_ENV != "production") {
     res.locals.currentUser = req.isAuthenticated() ? req.user : null;
     next(); // Proceed to the next middleware/route handler
   });
+
+  
+  app.get("/", (req, res) => {
+    res.redirect("/listings");
+  });
+  
   
   // Demo route for user registration
   app.get("/demouser", async (req, res) => {
