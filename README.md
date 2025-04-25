@@ -7,7 +7,8 @@ WanderLust is a web application built to help users explore and book travel dest
 - **User Authentication**: Users can register, log in, and manage their accounts securely.
 - **Listings**: Users can browse, view, and filter travel listings.
 - **Reviews**: Users can leave reviews and ratings for listings.
-- **Favorites**: Users can mark listings as favorites for later.
+- **Wishlist**: Users can save listings to their wishlist for later viewing.
+- **User Profiles**: Users can customize their profiles and view their listings and saved items.
 - **Responsive Design**: Optimized for both desktop and mobile views.
 
 ## Installation
@@ -17,46 +18,61 @@ To get started with the project locally, follow these steps:
 1. **Clone the repository**:
    ```bash
    git clone https://github.com/vam-luffy/wanderLust.git
-Install dependencies: Navigate to the project directory and run the following command to install required dependencies:
+   ```
 
-bash
-Copy code
-npm install
-Set up MongoDB: Ensure you have MongoDB running locally or use a cloud MongoDB service like MongoDB Atlas. Update the connection string in your project if needed (found in app.js or config.js).
+2. **Install dependencies**: Navigate to the project directory and run the following command to install required dependencies:
+   ```bash
+   npm install
+   ```
 
-Start the server: After installing dependencies and setting up MongoDB, run the following command to start the server:
+3. **Set up Environment Variables**: Create a `.env` file in the root directory with the required environment variables. You can use the `.env.example` file as a template.
 
-bash
-Copy code
-npm start
-The application should now be running at http://localhost:8080.
+4. **Set up MongoDB**: Ensure you have MongoDB running locally or use a cloud MongoDB service like MongoDB Atlas. Update the connection string in your `.env` file.
 
-Usage
-Sign Up: Create an account to start browsing and saving listings.
-Browse Listings: Explore various travel destinations and experiences.
-Add Reviews: Leave reviews and ratings for listings you've visited.
-Favorite Listings: Save your favorite listings for quick access.
-Technologies Used
-Frontend: HTML, CSS, JavaScript, EJS (Embedded JavaScript templating)
-Backend: Node.js, Express.js
-Database: MongoDB (via Mongoose)
-Authentication: Passport.js (passport-local-mongoose for user authentication)
-Contributing
+5. **Start the server**: After installing dependencies and setting up MongoDB, run the following command to start the server:
+   ```bash
+   npm start
+   ```
+
+The application should now be running at http://localhost:3000.
+
+## Usage
+
+- **Sign Up/Login**: Create an account or log in to access all features.
+- **Browse Listings**: Explore various travel destinations and experiences.
+- **View Listing Details**: Click on a listing to see detailed information, photos, and reviews.
+- **Add to Wishlist**: Save listings to your wishlist by clicking the heart icon on any listing.
+- **View Wishlist**: Access your saved listings from your user profile dashboard.
+- **Add Reviews**: Leave reviews and ratings for listings you've visited.
+- **Manage Profile**: Update your profile information and view your listings and wishlist.
+
+## Technologies Used
+
+- **Frontend**: HTML, CSS, JavaScript, Bootstrap 5, EJS (Embedded JavaScript templating)
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB (via Mongoose)
+- **Authentication**: Passport.js (passport-local-mongoose for user authentication)
+- **File Upload**: Cloudinary, Multer
+- **Maps**: Mapbox API
+
+## Contributing
+
 If you want to contribute to this project, feel free to fork the repository and submit a pull request.
 
 Steps to Contribute:
-Fork the repository.
-Create a new branch for your feature/fix.
-Make your changes and commit them with a clear message.
-Push your changes and open a pull request.
-License
+1. Fork the repository.
+2. Create a new branch for your feature/fix.
+3. Make your changes and commit them with a clear message.
+4. Push your changes and open a pull request.
+
+## License
+
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-Acknowledgments
-Thanks to the contributors and the open-source community.
-Inspired by various travel booking platforms.
-python
-Copy code
+## Acknowledgments
+
+- Thanks to the contributors and the open-source community.
+- Inspired by various travel booking platforms.
 
 ### Customization
 

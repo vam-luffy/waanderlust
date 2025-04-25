@@ -1,0 +1,207 @@
+<% layout('/layouts/boilerplate') -%>
+
+<div class="container mt-5">
+  <div class="row">
+    <!-- Wishlist Header -->
+    <div class="col-12 mb-4">
+      <div class="d-flex align-items-center">
+        <a href="/user/profile" class="btn btn-sm btn-outline-secondary rounded-circle me-3">
+          <i class="fas fa-arrow-left"></i>
+        </a>
+        <h2 class="mb-0">My Wishlist</h2>
+      </div>
+      <p class="text-muted mt-2">Places you've saved for later</p>
+    </div>
+    
+    <!-- Wishlist Content -->
+    <div class="col-12">
+      <% if (wishlistItems && wishlistItems.length > 0) { %>
+        <div class="row">
+          <% for (let listing of wishlistItems) { %>
+            <div class="col-lg-4 col-md-6 mb-4">
+              <div class="card listing-card h-100 animate__animated animate__fadeIn">
+                <div class="card-img-container">
+                  <img src="<%= listing.image.url %>" class="card-img-top" alt="<%= listing.title %>">
+                  <button class="btn wishlist-btn active" data-listing-id="<%= listing._id %>">
+                    <i class="fa-solid fa-heart"></i>
+                  </button>
+                </div>
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <h5 class="card-title mb-1"><%= listing.title %></h5>
+                    <p class="card-price mb-0">€<%= listing.price %><span>/night</span></p>
+                  </div>
+                  <p class="card-location">
+                    <i class="fa-solid fa-location-dot"></i> 
+                    <%= listing.location %>
+                  </p>
+                  <div class="mt-3">
+                    <a href="/listings/<%= listing._id %>" class="btn btn-outline-primary btn-sm">View Details</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% } %>
+        </div>
+      <% } else { %>
+        <!-- Empty State -->
+        <div class="empty-state text-center py-5">
+          <i class="fa-regular fa-heart empty-icon"></i>
+          <h4 class="mt-3">Your Wishlist is Empty</h4>
+          <p class="text-muted">Save properties you love by clicking the heart icon on any listing</p>
+          <a href="/listings" class="btn btn-primary mt-3">
+            <i class="fas fa-search me-2"></i>Explore Listings
+          </a>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<style>
+  .listing-card {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+  }
+
+  .listing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--dark-shadow);
+  }
+
+  .card-img-container {
+    position: relative;
+    overflow: hidden;
+    height: 200px;
+  }
+
+  .card-img-top {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .listing-card:hover .card-img-top {
+    transform: scale(1.05);
+  }
+
+  .wishlist-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: white;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+    padding: 0;
+    z-index: 1;
+  }
+
+  .wishlist-btn i {
+    font-size: 1rem;
+    color: #ccc;
+    transition: all 0.2s ease;
+  }
+
+  .wishlist-btn.active i {
+    color: var(--primary-color);
+  }
+
+  .card-location {
+    color: var(--dark-gray);
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+  }
+
+  .card-location i {
+    margin-right: 5px;
+    font-size: 0.8rem;
+  }
+
+  .card-price {
+    font-weight: 600;
+    color: var(--primary-color);
+  }
+
+  .card-price span {
+    font-weight: 400;
+    font-size: 0.85rem;
+    color: var(--dark-gray);
+  }
+
+  .empty-icon {
+    font-size: 4rem;
+    color: var(--light-gray);
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add click handlers to wishlist buttons
+    const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+    
+    wishlistButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const listingId = this.getAttribute('data-listing-id');
+        toggleWishlist(listingId, this);
+      });
+    });
+    
+    // Function to toggle wishlist status
+    async function toggleWishlist(listingId, button) {
+      try {
+        const response = await fetch(`/user/wishlist/${listingId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          if (!data.added) {
+            // If removed from wishlist, remove the card from display with animation
+            const card = button.closest('.col-lg-4');
+            card.classList.add('animate__fadeOut');
+            
+            // Wait for animation to complete then remove
+            setTimeout(() => {
+              card.remove();
+              
+              // Check if wishlist is now empty
+              const remainingCards = document.querySelectorAll('.listing-card');
+              if (remainingCards.length === 0) {
+                // Display empty state
+                const wishlistContent = document.querySelector('.col-12');
+                wishlistContent.innerHTML = `
+                  <div class="empty-state text-center py-5">
+                    <i class="fa-regular fa-heart empty-icon"></i>
+                    <h4 class="mt-3">Your Wishlist is Empty</h4>
+                    <p class="text-muted">Save properties you love by clicking the heart icon on any listing</p>
+                    <a href="/listings" class="btn btn-primary mt-3">
+                      <i class="fas fa-search me-2"></i>Explore Listings
+                    </a>
+                  </div>
+                `;
+              }
+            }, 500);
+          }
+        } else {
+          console.error('Error toggling wishlist:', data.message);
+        }
+      } catch (err) {
+        console.error('Error:', err);
+      }
+    }
+  });
+</script> 

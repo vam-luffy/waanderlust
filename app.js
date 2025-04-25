@@ -7,22 +7,31 @@ if (process.env.NODE_ENV != "production") {
   const path = require("path");
   const ejsMate = require('ejs-mate');
   const ExpressError = require("./utils/ExpressError");
-  const listingRouter = require("./routes/listing.js");
-  const reviewRouter = require("./routes/review.js");
   const session = require("express-session");
   const Mongostore=require("connect-mongo")
   const flash = require("connect-flash");
   const passport = require("passport");
   const LocalStrategy = require("passport-local");
+  const methodOverride = require("method-override");
+  
+  // Cloudinary configuration
+  const cloudinary = require('cloudinary').v2;
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+  });
+  
   const User = require("./models/user.js");
+  const listingRouter = require("./routes/listing.js");
+  const reviewRouter = require("./routes/review.js");
   const userRouter = require("./routes/user.js");
   const adminRouter = require("./routes/admin.js");
   
   const app = express();
-  const port = 8080;
+  const port = process.env.PORT || 3000;
   const dbUrl = process.env.ATLASDB_URL;
   const localDbUrl = 'mongodb://localhost:27017/wanderlust';
-  const methodOverride = require("method-override");
   
   // Set up view engine to use EJS and ejsMate for layout support
   app.set("view engine", "ejs");

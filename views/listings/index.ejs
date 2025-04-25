@@ -77,6 +77,11 @@
               <!-- Image with a fixed height and object-fit to cover the aspect ratio -->
               <div class="card-img-container">
                 <img src="<%=listing.image.url%>" class="card-img-top" alt="<%=listing.title%>">
+                <% if(currentUser) { %>
+                <button class="btn wishlist-btn" onclick="toggleWishlist(event, '<%= listing._id %>', this)" data-listing-id="<%= listing._id %>">
+                  <i class="fa-heart fa-regular"></i>
+                </button>
+                <% } %>
               </div>
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-start">
@@ -214,6 +219,69 @@
     
     resetButton.addEventListener('click', resetFilters);
   });
+
+  // Wishlist functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize wishlist buttons state
+    if (typeof currentUser !== 'undefined' && currentUser) {
+      const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+      
+      wishlistButtons.forEach(button => {
+        const listingId = button.getAttribute('data-listing-id');
+        checkWishlistStatus(listingId, button);
+      });
+    }
+  });
+
+  // Function to check if a listing is in the user's wishlist
+  async function checkWishlistStatus(listingId, button) {
+    try {
+      const response = await fetch(`/user/wishlist/${listingId}/status`);
+      const data = await response.json();
+      
+      if (data.success && data.isInWishlist) {
+        button.classList.add('active');
+        const icon = button.querySelector('i');
+        icon.classList.remove('fa-regular');
+        icon.classList.add('fa-solid');
+      }
+    } catch (err) {
+      console.error('Error checking wishlist status:', err);
+    }
+  }
+
+  // Function to toggle wishlist item
+  async function toggleWishlist(event, listingId, button) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    try {
+      const response = await fetch(`/user/wishlist/${listingId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        const icon = button.querySelector('i');
+        
+        if (data.added) {
+          button.classList.add('active');
+          icon.classList.remove('fa-regular');
+          icon.classList.add('fa-solid');
+        } else {
+          button.classList.remove('active');
+          icon.classList.remove('fa-solid');
+          icon.classList.add('fa-regular');
+        }
+      }
+    } catch (err) {
+      console.error('Error toggling wishlist:', err);
+    }
+  }
 </script>
 
 <style>
@@ -381,6 +449,7 @@
     text-decoration: none;
     color: inherit;
     display: block;
+    position: relative;
   }
   
   .listing-card {
@@ -494,6 +563,40 @@
     display: none;
     color: var(--primary-color);
     opacity: 0.8;
+  }
+  
+  /* Wishlist Button */
+  .wishlist-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: white;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+    padding: 0;
+    z-index: 9;
+  }
+
+  .wishlist-btn:hover {
+    transform: scale(1.1);
+  }
+
+  .wishlist-btn i {
+    font-size: 1rem;
+    color: #ccc;
+    transition: all 0.2s ease;
+  }
+
+  .wishlist-btn.active i {
+    color: var(--primary-color);
+    font-weight: 900;
   }
   
   /* Responsive Styles */

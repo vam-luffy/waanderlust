@@ -1,8 +1,4 @@
 <% layout('/layouts/boilerplate') -%>
-<script>
-    const mapToken = "<%=process.env.MAP_TOKEN %>";
-    const listing = <%- JSON.stringify(listings) %>;
-</script>
 
 <div class="container my-5">
     <div class="row justify-content-center">
@@ -96,6 +92,15 @@
                                             <i class="far fa-calendar-alt me-2"></i>Book this place
                                         </button>
                                     </div>
+                                    
+                                    <% if(currentUser) { %>
+                                    <div class="d-flex justify-content-center mb-4">
+                                        <button id="wishlistBtn" class="btn btn-outline-secondary rounded-pill" onclick="toggleWishlist()">
+                                            <i id="wishlistIcon" class="fa-regular fa-heart me-2"></i>
+                                            <span id="wishlistText">Save to Wishlist</span>
+                                        </button>
+                                    </div>
+                                    <% } %>
                                     
                                     <div class="price-details">
                                         <div class="d-flex justify-content-between mb-2">
@@ -222,8 +227,6 @@
         </div>
     </div>
 </div>
-
-<script src="/js/map.js"></script>
 
 <style>
     /* Main listing image */
@@ -373,4 +376,98 @@
         color: #555;
     }
 </style>
+
+<script>
+    const mapToken = "<%=process.env.MAP_TOKEN %>";
+    const listing = <%- JSON.stringify(listings) %>;
+    <% if(currentUser) { %>
+    const currentUserId = "<%=currentUser._id%>";
+    const listingId = "<%= listings._id %>";
+    <% } %>
+    
+    // Check initial wishlist status when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        <% if(currentUser) { %>
+        checkWishlistStatus();
+        <% } %>
+        
+        // Map initialization code
+        mapboxgl.accessToken = mapToken;
+        const map = new mapboxgl.Map({
+            container: 'map', // container ID
+            style: 'mapbox://styles/mapbox/streets-v11', // style URL
+            center: listing.geometry.coordinates, // starting position [lng, lat]
+            zoom: 9 // starting zoom
+        });
+
+        map.addControl(new mapboxgl.NavigationControl());
+
+        new mapboxgl.Marker()
+            .setLngLat(listing.geometry.coordinates)
+            .setPopup(
+                new mapboxgl.Popup({offset: 25})
+                .setHTML(
+                    `<h3>${listing.title}</h3><p>Exact Location will be provided after booking</p>`
+                )
+            )
+            .addTo(map);
+    });
+    
+    // Function to check if listing is in wishlist
+    async function checkWishlistStatus() {
+        try {
+            const response = await fetch(`/user/wishlist/${listingId}/status`);
+            const data = await response.json();
+            
+            if (data.success) {
+                updateWishlistButton(data.isInWishlist);
+            }
+        } catch (err) {
+            console.error('Error checking wishlist status:', err);
+        }
+    }
+    
+    // Function to toggle wishlist
+    async function toggleWishlist() {
+        try {
+            const response = await fetch(`/user/wishlist/${listingId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                updateWishlistButton(data.added);
+            } else {
+                console.error('Error toggling wishlist:', data.message);
+            }
+        } catch (err) {
+            console.error('Error:', err);
+        }
+    }
+    
+    // Function to update wishlist button
+    function updateWishlistButton(isInWishlist) {
+        const wishlistBtn = document.getElementById('wishlistBtn');
+        const wishlistIcon = document.getElementById('wishlistIcon');
+        const wishlistText = document.getElementById('wishlistText');
+        
+        if (isInWishlist) {
+            wishlistBtn.classList.remove('btn-outline-secondary');
+            wishlistBtn.classList.add('btn-secondary');
+            wishlistIcon.classList.remove('fa-regular');
+            wishlistIcon.classList.add('fa-solid');
+            wishlistText.textContent = 'Saved to Wishlist';
+        } else {
+            wishlistBtn.classList.remove('btn-secondary');
+            wishlistBtn.classList.add('btn-outline-secondary');
+            wishlistIcon.classList.remove('fa-solid');
+            wishlistIcon.classList.add('fa-regular');
+            wishlistText.textContent = 'Save to Wishlist';
+        }
+    }
+</script>
 
