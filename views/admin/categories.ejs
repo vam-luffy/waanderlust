@@ -1,0 +1,239 @@
+<% layout('/layouts/boilerplate') -%>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card border-0 shadow-lg">
+                <div class="card-header bg-white border-0 py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2 class="m-0">Category Management</h2>
+                        <button class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                            <i class="fas fa-plus me-2"></i>Add Category
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Manage the categories that users can select when creating listings. Each category will appear in filters and on listing details.
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <% const categories = ['trending', 'rooms', 'cities', 'mountains', 'castles', 'arctic', 'camping', 'farms']; %>
+                        <% const icons = {
+                            'trending': 'fa-fire',
+                            'rooms': 'fa-bed',
+                            'cities': 'fa-building',
+                            'mountains': 'fa-mountain',
+                            'castles': 'fa-fort-awesome',
+                            'arctic': 'fa-snowflake',
+                            'camping': 'fa-tents',
+                            'farms': 'fa-cow'
+                        } %>
+                        
+                        <% for(let category of categories) { %>
+                            <div class="col-md-6 col-lg-3 mb-4">
+                                <div class="card h-100 border-0 shadow-sm category-card">
+                                    <div class="card-body d-flex flex-column">
+                                        <div class="category-icon mb-3">
+                                            <i class="fas <%= icons[category] %>"></i>
+                                        </div>
+                                        <h5 class="card-title text-capitalize"><%= category %></h5>
+                                        <p class="card-text text-muted flex-grow-1">Used in <%= categoryCounts[category] || 0 %> listings</p>
+                                        <div class="d-flex justify-content-between mt-3">
+                                            <button class="btn btn-sm btn-outline-primary edit-btn" data-category="<%= category %>" data-bs-toggle="modal" data-bs-target="#editCategoryModal">
+                                                <i class="fas fa-edit me-1"></i> Edit
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger delete-btn" data-category="<%= category %>" data-bs-toggle="modal" data-bs-target="#deleteCategoryModal">
+                                                <i class="fas fa-trash-alt me-1"></i> Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Category Modal -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addCategoryModalLabel">Add New Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addCategoryForm" action="/admin/categories" method="POST">
+                    <div class="mb-3">
+                        <label for="categoryName" class="form-label">Category Name</label>
+                        <input type="text" class="form-control" id="categoryName" name="name" placeholder="Enter a unique category name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoryIcon" class="form-label">Icon</label>
+                        <select class="form-select" id="categoryIcon" name="icon" required>
+                            <option value="">Select an icon</option>
+                            <option value="fa-fire">Fire (Trending)</option>
+                            <option value="fa-bed">Bed (Rooms)</option>
+                            <option value="fa-building">Building (Cities)</option>
+                            <option value="fa-mountain">Mountain</option>
+                            <option value="fa-fort-awesome">Castle</option>
+                            <option value="fa-snowflake">Snowflake (Arctic)</option>
+                            <option value="fa-tents">Tent (Camping)</option>
+                            <option value="fa-cow">Cow (Farms)</option>
+                            <option value="fa-water">Water (Beach)</option>
+                            <option value="fa-tree">Tree (Forest)</option>
+                            <option value="fa-umbrella-beach">Beach</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Category</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Category Modal -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCategoryModalLabel">Edit Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editCategoryForm">
+                    <input type="hidden" id="editCategoryId" name="id">
+                    <input type="hidden" id="oldCategoryName" name="oldName">
+                    <div class="mb-3">
+                        <label for="editCategoryName" class="form-label">Category Name</label>
+                        <input type="text" class="form-control" id="editCategoryName" name="name" placeholder="Enter category name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editCategoryIcon" class="form-label">Icon</label>
+                        <select class="form-select" id="editCategoryIcon" name="icon" required>
+                            <option value="fa-fire">Fire (Trending)</option>
+                            <option value="fa-bed">Bed (Rooms)</option>
+                            <option value="fa-building">Building (Cities)</option>
+                            <option value="fa-mountain">Mountain</option>
+                            <option value="fa-fort-awesome">Castle</option>
+                            <option value="fa-snowflake">Snowflake (Arctic)</option>
+                            <option value="fa-tents">Tent (Camping)</option>
+                            <option value="fa-cow">Cow (Farms)</option>
+                            <option value="fa-water">Water (Beach)</option>
+                            <option value="fa-tree">Tree (Forest)</option>
+                            <option value="fa-umbrella-beach">Beach</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Category Modal -->
+<div class="modal fade" id="deleteCategoryModal" tabindex="-1" aria-labelledby="deleteCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteCategoryModalLabel">Delete Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the category <strong id="deleteCategoryName">Category</strong>?</p>
+                <p class="text-danger"><i class="fas fa-exclamation-triangle me-2"></i>This will remove the category from all listings and cannot be undone.</p>
+                <form id="deleteCategoryForm">
+                    <input type="hidden" id="deleteCategoryId" name="id">
+                    <input type="hidden" id="deleteCategoryNameInput" name="name">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .category-card {
+        transition: all 0.3s ease;
+        border-radius: var(--border-radius);
+    }
+    
+    .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--box-shadow);
+    }
+    
+    .category-icon {
+        font-size: 2rem;
+        color: var(--primary-color);
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+    
+    .edit-btn, .delete-btn {
+        border-radius: 20px;
+    }
+    
+    .animate-in {
+        animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle edit button clicks
+        const editButtons = document.querySelectorAll('.edit-btn');
+        editButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const category = this.getAttribute('data-category');
+                document.getElementById('editCategoryName').value = category;
+                document.getElementById('oldCategoryName').value = category;
+                document.getElementById('editCategoryForm').action = `/admin/categories/${category}?_method=PUT`;
+                
+                // Set the correct icon in the dropdown
+                const icons = {
+                    'trending': 'fa-fire',
+                    'rooms': 'fa-bed',
+                    'cities': 'fa-building',
+                    'mountains': 'fa-mountain',
+                    'castles': 'fa-fort-awesome',
+                    'arctic': 'fa-snowflake',
+                    'camping': 'fa-tents',
+                    'farms': 'fa-cow'
+                };
+                
+                document.getElementById('editCategoryIcon').value = icons[category] || 'fa-fire';
+            });
+        });
+        
+        // Handle delete button clicks
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const category = this.getAttribute('data-category');
+                document.getElementById('deleteCategoryName').textContent = category;
+                document.getElementById('deleteCategoryNameInput').value = category;
+                document.getElementById('deleteCategoryForm').action = `/admin/categories/${category}?_method=DELETE`;
+            });
+        });
+    });
+</script> 

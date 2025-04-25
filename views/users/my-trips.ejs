@@ -1,0 +1,183 @@
+<% layout('/layouts/boilerplate') -%>
+
+<div class="container mt-5">
+  <h1 class="page-title mb-4">My Trips</h1>
+  
+  <div class="trips-tabs mb-4">
+    <ul class="nav nav-tabs" id="tripsTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="upcoming-tab" data-bs-toggle="tab" data-bs-target="#upcoming" type="button" role="tab" aria-controls="upcoming" aria-selected="true">
+          Upcoming
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="past-tab" data-bs-toggle="tab" data-bs-target="#past" type="button" role="tab" aria-controls="past" aria-selected="false">
+          Past
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="cancelled-tab" data-bs-toggle="tab" data-bs-target="#cancelled" type="button" role="tab" aria-controls="cancelled" aria-selected="false">
+          Cancelled
+        </button>
+      </li>
+    </ul>
+  </div>
+  
+  <div class="tab-content" id="tripsTabContent">
+    <!-- Upcoming Trips Tab -->
+    <div class="tab-pane fade show active" id="upcoming" role="tabpanel" aria-labelledby="upcoming-tab">
+      <div class="empty-state card p-5 text-center">
+        <div>
+          <i class="fa-solid fa-calendar-days empty-icon mb-3"></i>
+          <h3>No Upcoming Trips</h3>
+          <p class="text-muted">You don't have any upcoming trips. Start planning your next adventure!</p>
+          <a href="/listings" class="btn btn-primary mt-3">Explore Stays</a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Past Trips Tab -->
+    <div class="tab-pane fade" id="past" role="tabpanel" aria-labelledby="past-tab">
+      <div class="empty-state card p-5 text-center">
+        <div>
+          <i class="fa-solid fa-clock-rotate-left empty-icon mb-3"></i>
+          <h3>No Past Trips</h3>
+          <p class="text-muted">You haven't completed any trips yet.</p>
+          <a href="/listings" class="btn btn-primary mt-3">Explore Stays</a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Cancelled Trips Tab -->
+    <div class="tab-pane fade" id="cancelled" role="tabpanel" aria-labelledby="cancelled-tab">
+      <div class="empty-state card p-5 text-center">
+        <div>
+          <i class="fa-solid fa-ban empty-icon mb-3"></i>
+          <h3>No Cancelled Trips</h3>
+          <p class="text-muted">You don't have any cancelled trips.</p>
+          <a href="/listings" class="btn btn-primary mt-3">Explore Stays</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Example Trip Card (Hidden for now) -->
+  <div class="trip-card card mb-4" style="display: none;">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80" class="img-fluid rounded-start" alt="Trip Image">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <h5 class="card-title">Luxury Villa in Tuscany</h5>
+            <span class="badge bg-success">Confirmed</span>
+          </div>
+          <p class="card-text text-muted">Florence, Italy</p>
+          
+          <div class="trip-dates">
+            <div class="date-group">
+              <div class="date-label">Check-in</div>
+              <div class="date-value">Jun 15, 2024</div>
+            </div>
+            <div class="date-divider">→</div>
+            <div class="date-group">
+              <div class="date-label">Check-out</div>
+              <div class="date-value">Jun 22, 2024</div>
+            </div>
+          </div>
+          
+          <div class="trip-price mt-3">
+            <strong>Total: ₹25,000</strong>
+          </div>
+          
+          <div class="trip-actions mt-3">
+            <a href="#" class="btn btn-sm btn-outline-secondary">View Details</a>
+            <a href="#" class="btn btn-sm btn-outline-danger">Cancel Trip</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .page-title {
+    font-weight: 700;
+    color: var(--secondary-color);
+  }
+  
+  .trips-tabs .nav-tabs {
+    border-bottom: 1px solid #eee;
+  }
+  
+  .trips-tabs .nav-link {
+    color: var(--dark-gray);
+    border: none;
+    padding: 1rem 1.5rem;
+    font-weight: 500;
+  }
+  
+  .trips-tabs .nav-link.active {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+  }
+  
+  .empty-icon {
+    font-size: 4rem;
+    color: var(--light-gray);
+  }
+  
+  .empty-state {
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+  }
+  
+  .trip-card {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+  }
+  
+  .trip-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  }
+  
+  .trip-dates {
+    display: flex;
+    align-items: center;
+    margin: 1rem 0;
+    background-color: var(--light-gray);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+  }
+  
+  .date-group {
+    flex: 1;
+  }
+  
+  .date-label {
+    font-size: 0.8rem;
+    color: var(--dark-gray);
+  }
+  
+  .date-value {
+    font-weight: 600;
+  }
+  
+  .date-divider {
+    padding: 0 1rem;
+    color: var(--dark-gray);
+  }
+  
+  .trip-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+</style> 

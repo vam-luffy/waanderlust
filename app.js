@@ -16,10 +16,12 @@ if (process.env.NODE_ENV != "production") {
   const LocalStrategy = require("passport-local");
   const User = require("./models/user.js");
   const userRouter = require("./routes/user.js");
+  const adminRouter = require("./routes/admin.js");
   
   const app = express();
   const port = 8080;
   const dbUrl = process.env.ATLASDB_URL;
+  const localDbUrl = 'mongodb://localhost:27017/wanderlust';
   const methodOverride = require("method-override");
   
   // Set up view engine to use EJS and ejsMate for layout support
@@ -76,7 +78,7 @@ if (process.env.NODE_ENV != "production") {
   app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
-    res.locals.currentUser = req.isAuthenticated() ? req.user : null;
+    res.locals.currentUser = req.user || null;
     next(); // Proceed to the next middleware/route handler
   });
 
@@ -92,21 +94,49 @@ if (process.env.NODE_ENV != "production") {
     const registeredUser = await User.register(fakeUser, "helloworld");
     res.send(registeredUser);
   });
+
+  // Demo route to create an admin user
+  app.get("/create-admin", async (req, res) => {
+    try {
+      const adminUser = new User({ 
+        email: "admin@wanderlust.com", 
+        username: "admin", 
+        isAdmin: true 
+      });
+      const registeredUser = await User.register(adminUser, "adminpass");
+      res.send("Admin created: " + registeredUser.username);
+    } catch (err) {
+      res.send("Error creating admin: " + err.message);
+    }
+  });
   
   // Routes for managing listings and reviews
   app.use("/listings", listingRouter);  // Route for listings
   app.use("/listings/:id/reviews/", reviewRouter);  // Route for reviews for a specific listing
   app.use("/", userRouter);  // User-related routes (e.g., login, register)
+  app.use("/admin", adminRouter);  // Admin routes
   
   
   
   // MongoDB connection function
   async function main() {
     try {
-      await mongoose.connect(dbUrl); // Connect to MongoDB Atlas
-      console.log("Connected to db");
-    } catch (err) {
-      console.log("Database connection error:", err);
+      await mongoose.connect(dbUrl, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        ssl: true,
+        tls: true,
+        tlsAllowInvalidCertificates: false
+      }); // Connect to MongoDB Atlas
+      console.log("Connected to MongoDB Atlas");
+    } catch (atlasErr) {
+      console.log("Atlas connection error, trying local MongoDB:", atlasErr);
+      try {
+        await mongoose.connect(localDbUrl);
+        console.log("Connected to local MongoDB");
+      } catch (localErr) {
+        console.log("Local database connection error:", localErr);
+      }
     }
   }
   

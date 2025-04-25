@@ -57,8 +57,30 @@ try{
 }
 }
 
-
-
+// Middleware to check if user is an admin
+module.exports.isAdmin = async (req, res, next) => {
+    try {
+        // Check if user is logged in
+        if (!req.user) {
+            req.flash("error", "You need to be logged in to access admin area");
+            return res.redirect("/login");
+        }
+        
+        // Check if user has admin role
+        // Note: This assumes you have an 'isAdmin' field in your User model
+        // You might need to adjust this based on your actual user model structure
+        if (!req.user.isAdmin) {
+            req.flash("error", "You don't have permission to access the admin area");
+            return res.redirect("/listings");
+        }
+        
+        next();
+    } catch (err) {
+        console.log(err);
+        req.flash("error", "Something went wrong");
+        res.redirect("/listings");
+    }
+};
 
 module.exports.validateListing = (req, res, next) => {
      // Debugging log

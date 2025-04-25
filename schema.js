@@ -8,6 +8,9 @@ module.exports.listingSchema = Joi.object({
         location: Joi.string().required(),  // Location required
         country: Joi.string().required(),  // Country bhi required
         price: Joi.number().required().min(0),  // Price number hona chahiye aur 0 se bada
+        categories: Joi.array().items(Joi.string().valid(
+            'trending', 'rooms', 'cities', 'mountains', 'castles', 'arctic', 'camping', 'farms'
+        )).optional(),
         image: Joi.object({
             url: Joi.string().uri().allow("", null)  // Image URL optional aur agar empty ho toh allow kar sakte ho
         }).optional()  // Image optional hai, agar user image na de toh chalega

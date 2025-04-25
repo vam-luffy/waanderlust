@@ -1,68 +1,280 @@
 <% layout('/layouts/boilerplate') -%>
-<body>
-    <!-- Container to center content, use container-fluid for full width -->
-    <div class="container mt-4">
-        <div class="row justify-content-center">
-            <!-- Column for content, centered and with appropriate width -->
-            <div class="col-12 col-md-10 col-lg-8">
 
-                <!-- Title Section -->
-                <h3 class="text-center mb-4">Edit Listing</h3>
-
-                <!-- Form for editing listing -->
-                <form action="/listings/<%= listing._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
-                    <!-- Title Field -->
-                    <div class="mb-3">
-                        <label for="title" class="form-label">Title</label>
-                        <input type="text" class="form-control" id="title" name="listing[title]" value="<%= listing.title %>" required>
-                    </div>
-
-                    <!-- Description Field -->
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea class="form-control" id="description" name="listing[description]" required><%= listing.description %></textarea>
-                    </div>
-
-                    <!-- Price Field -->
-                    <div class="mb-3">
-                        <label for="price" class="form-label">Price</label>
-                        <input type="number" class="form-control" id="price" name="listing[price]" value="<%= listing.price %>" required>
-                    </div>
-
-                    <!-- Location Field -->
-                    <div class="mb-3">
-                        <label for="location" class="form-label">Location</label>
-                        <input type="text" class="form-control" id="location" name="listing[location]" value="<%= listing.location %>" required>
-                    </div>
-
-                    <!-- Country Field -->
-                    <div class="mb-3">
-                        <label for="country" class="form-label">Country</label>
-                        <input type="text" class="form-control" id="country" name="listing[country]" value="<%= listing.country %>" required>
-                    </div>
-
-                    <!-- Original Image Preview Section -->
-                    <div class="mb-3">
-                        <label class="form-label">Original Image</label><br>
-                        <!-- Bootstrap Styling for Image Preview -->
-                        <img src="<%= Listing %>" alt="Original Image" class="img-fluid img-thumbnail" style="max-width: 150px;">
-                    </div>
-
-                    <!-- Image URL Field -->
-                    <div class="mb-3">
-                        <label for="image" class="form-label">Upload New Image</label>
-                        <input 
-                        type="file" 
-                        class="form-control" 
-                        id="image" 
-                        name="listing[image][url]" 
-                        >
-                    </div>
-
-                    <!-- Submit Button -->
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                </form>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <div class="card shadow listing-form-card">
+                <div class="card-body p-4 p-md-5">
+                    <!-- Form Title -->
+                    <h2 class="text-center mb-4 form-title">Edit Your Listing</h2>
+                    <p class="text-center text-muted mb-4">Update your space information</p>
+                    
+                    <!-- Form for editing listing -->
+                    <form action="/listings/<%= listing._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+                        <!-- Title Field -->
+                        <div class="form-floating mb-4 animate-field">
+                            <input type="text" class="form-control" id="title" name="listing[title]" value="<%= listing.title %>" placeholder="Enter title" required>
+                            <label for="title">Title</label>
+                        </div>
+    
+                        <!-- Description Field -->
+                        <div class="form-floating mb-4 animate-field">
+                            <textarea class="form-control" id="description" name="listing[description]" placeholder="Enter description" style="height: 150px" required><%= listing.description %></textarea>
+                            <label for="description">Description</label>
+                        </div>
+                        
+                        <!-- Categories Selection -->
+                        <div class="mb-4 animate-field">
+                            <label for="categories" class="form-label">Categories</label>
+                            <select name="listing[categories][]" class="form-select" id="categories" multiple data-mdb-clear-button="true">
+                                <option value="trending" <%= listing.categories && listing.categories.includes('trending') ? 'selected' : '' %>>Trending</option>
+                                <option value="rooms" <%= listing.categories && listing.categories.includes('rooms') ? 'selected' : '' %>>Rooms</option>
+                                <option value="cities" <%= listing.categories && listing.categories.includes('cities') ? 'selected' : '' %>>Iconic Cities</option>
+                                <option value="mountains" <%= listing.categories && listing.categories.includes('mountains') ? 'selected' : '' %>>Mountains</option>
+                                <option value="castles" <%= listing.categories && listing.categories.includes('castles') ? 'selected' : '' %>>Castles</option>
+                                <option value="arctic" <%= listing.categories && listing.categories.includes('arctic') ? 'selected' : '' %>>Arctic</option>
+                                <option value="camping" <%= listing.categories && listing.categories.includes('camping') ? 'selected' : '' %>>Camping</option>
+                                <option value="farms" <%= listing.categories && listing.categories.includes('farms') ? 'selected' : '' %>>Farms</option>
+                            </select>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Select multiple categories by clicking multiple items or holding Ctrl/Cmd while clicking
+                            </div>
+                        </div>
+    
+                        <!-- Price, Location and Country Fields -->
+                        <div class="row mb-4">
+                            <div class="col-md-4 mb-3 mb-md-0 animate-field">
+                                <div class="form-floating">
+                                    <input type="number" class="form-control" id="price" name="listing[price]" value="<%= listing.price %>" placeholder="Enter price" required>
+                                    <label for="price">Price (₹)</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3 mb-md-0 animate-field">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="location" name="listing[location]" value="<%= listing.location %>" placeholder="Enter location" required>
+                                    <label for="location">Location</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 animate-field">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="country" name="listing[country]" value="<%= listing.country %>" placeholder="Enter country" required>
+                                    <label for="country">Country</label>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Image Preview and Upload -->
+                        <div class="mb-4 animate-field">
+                            <label class="form-label">Current Image</label>
+                            <div class="current-image-container mb-3">
+                                <img src="<%= listing.image.url %>" alt="Current Image" class="img-thumbnail current-image">
+                            </div>
+                            
+                            <label for="image" class="form-label">Upload New Image (Optional)</label>
+                            <div class="image-upload-container">
+                                <input type="file" class="form-control" id="image" name="listing[image][url]" accept="image/*" onchange="previewImage(event)">
+                                <div id="image-preview" class="mt-3 d-none">
+                                    <label>New Image Preview:</label>
+                                    <img src="" alt="Preview" class="img-thumbnail" style="max-height: 200px">
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Submit Button -->
+                        <div class="d-flex justify-content-between mt-5">
+                            <a href="/listings/<%= listing._id %>" class="btn btn-outline-secondary btn-lg">
+                                <i class="fas fa-arrow-left me-2"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg create-btn">
+                                <span>Save Changes</span>
+                                <i class="fas fa-check ms-2"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</body>
+</div>
+
+<!-- Add Select2 CSS and JS for better multi-select -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    // Initialize Select2
+    $(document).ready(function() {
+        $('#categories').select2({
+            placeholder: 'Select categories',
+            closeOnSelect: false,
+            allowClear: true,
+            width: '100%',
+            theme: "classic"
+        });
+        
+        console.log("Select2 initialized for categories on edit form");
+    });
+
+    // Image preview function
+    function previewImage(event) {
+        const input = event.target;
+        const preview = document.getElementById('image-preview');
+        
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                preview.querySelector('img').src = e.target.result;
+                preview.classList.remove('d-none');
+            };
+            
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+<style>
+    /* Modern form styling */
+    .listing-form-card {
+        border: none;
+        border-radius: var(--border-radius);
+        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+        transition: var(--transition);
+        overflow: hidden;
+    }
+    
+    .listing-form-card:hover {
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        transform: translateY(-5px);
+    }
+    
+    .form-title {
+        font-weight: 700;
+        color: var(--secondary-color);
+        margin-bottom: 2rem;
+        position: relative;
+    }
+    
+    .form-title:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 3px;
+        background-color: var(--primary-color);
+        border-radius: 3px;
+    }
+    
+    /* Animation for form fields */
+    .animate-field {
+        transform: translateY(20px);
+        opacity: 0;
+        animation: fadeInUp 0.5s forwards;
+    }
+    
+    @keyframes fadeInUp {
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    
+    .animate-field:nth-child(1) { animation-delay: 0.1s; }
+    .animate-field:nth-child(2) { animation-delay: 0.2s; }
+    .animate-field:nth-child(3) { animation-delay: 0.3s; }
+    .animate-field:nth-child(4) { animation-delay: 0.4s; }
+    .animate-field:nth-child(5) { animation-delay: 0.5s; }
+    .animate-field:nth-child(6) { animation-delay: 0.6s; }
+    
+    /* Form control styling */
+    .form-control, .form-select {
+        padding: 0.8rem 1rem;
+        border: 1px solid #e0e0e0;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(255, 56, 92, 0.2);
+    }
+    
+    /* Custom styling for Select2 */
+    .select2-container--default .select2-selection--multiple {
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+        padding: 5px;
+        min-height: 58px;
+    }
+    
+    .select2-container--default.select2-container--focus .select2-selection--multiple {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(255, 56, 92, 0.2);
+    }
+    
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 5px 10px;
+        margin: 3px;
+    }
+    
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+        color: white;
+        margin-right: 5px;
+    }
+    
+    /* Current image styling */
+    .current-image-container {
+        position: relative;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+    
+    .current-image {
+        max-height: 200px;
+        border: 3px solid white;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .current-image:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* Submit button styling */
+    .create-btn {
+        background-color: var(--primary-color);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        border-radius: 30px;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+        transition: all 0.4s ease;
+    }
+    
+    .create-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 7px 15px rgba(255, 56, 92, 0.3);
+    }
+    
+    /* Form floating labels */
+    .form-floating label {
+        padding: 1rem;
+    }
+    
+    .form-floating>.form-control {
+        height: 58px;
+    }
+    
+    .form-floating textarea.form-control {
+        height: 150px;
+    }
+</style>

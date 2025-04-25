@@ -1,125 +1,330 @@
 <style>
-  .btn-search{
-    background-color:#fe424d;
+  .navbar {
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
+    padding: 0.75rem 2rem;
+    transition: all 0.3s ease;
+  }
+  
+  .navbar-scrolled {
+    padding: 0.5rem 2rem;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .btn-search {
+    background-color: var(--primary-color);
     color: white;
-    border-radius: 25px;
-    
+    border-radius: 24px;
+    border: none;
+    transition: all 0.3s ease;
   }
-  .btn-search:hover{
-    background-color:#fe424d;
-    
+  
+  .btn-search:hover {
+    background-color: var(--hover-color);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
   }
-  button.btn.btn-search {
-    display: inherit;
+  
+  .search-input {
+    border-radius: 24px;
+    padding: 0.6rem 1.5rem;
+    border: 1px solid #eee;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
   }
-  .btn-search i{
-    position: relative;
-    top: 5px;
-    right: 5px;
-  }
-  .search-input{
-    border-radius: 25px;
-    padding: 0.5rem 3rem 0.5rem 3rem;
-    font-size: 0.8rem;
+  
+  .search-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(255, 56, 92, 0.15);
+    outline: none;
   }
 </style>
 
-<nav class="navbar navbar-expand-md navbar-light bg-light border-bottom sticky-top">
+<nav class="navbar navbar-expand-lg sticky-top">
   <div class="container-fluid">
-      <a class="navbar-brand" href="/listings">
-          <i class="fa-regular fa-compass fa-lg"></i> 
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div class="navbar-nav left-nav me-auto custom-left-nav">  <!-- Apply custom class for more left movement -->
-              
-              <a class="nav-link" href="/listings" id="listings-link">Explore</a>
-              
+    <!-- Logo -->
+    <a class="navbar-brand" href="/listings">
+      <i class="fa-regular fa-compass"></i>
+      <span class="ms-2 d-none d-sm-inline fw-bold">Wanderlust</span>
+    </a>
+    
+    <!-- Navbar Toggler -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" 
+      aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <!-- Navbar Content -->
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <!-- Navigation Links -->
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/listings" id="listings-link">
+            <i class="fa-solid fa-globe me-1"></i> Explore
+          </a>
+        </li>
+      </ul>
+      
+      <!-- Search Form -->
+      <form class="d-flex search-form mx-auto" role="search">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text border-0 bg-white">
+              <i class="fa-solid fa-magnifying-glass text-muted"></i>
+            </span>
           </div>
-          <div class="navbar-nav ms-auto">
-            <form class="d-flex" role="search">
-              <input class="form-control me-2 search-input" type="search" placeholder="Search destinations" aria-label="Search">
-              <button class="btn btn-search" type="submit"> <i class="fa-solid fa-magnifying-glass"></i> Search</button>
-            </form>
-          </div>
-          <div class="navbar-nav ms-auto"> 
-            <a class="nav-link" href="/listings/new" id="newlisting-link">Airbnb Your Home</a>
-            <% if (!currentUser) { %>
-              <a class="nav-link" href="/signup" id="signup-link"> <b>Signup</b> </a>
-              <a class="nav-link" href="/login" id="login-link"> <b>Login</b> </a>
-            <% } %>
-            <% if (currentUser) { %>
-                <a class="nav-link" href="/logout" id="logout-link">Logout</a>
-            <% } %>
-          </div>
-      </div>
+          <input class="form-control search-input border-0" type="search" placeholder="Search destinations" aria-label="Search">
+          <button class="btn btn-search" type="submit">
+            <span class="d-none d-md-inline me-1">Search</span>
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </form>
+      
+      <!-- User Menu -->
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link host-link" href="/listings/new" id="newlisting-link">
+            <i class="fa-solid fa-plus me-1"></i> Host your home
+          </a>
+        </li>
+        
+        <% if (typeof currentUser === 'undefined' || currentUser === null) { %>
+          <li class="nav-item d-none d-md-block">
+            <a class="nav-link" href="/signup" id="signup-link">
+              <i class="fa-solid fa-user-plus me-1"></i> Sign up
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link login-btn" href="/login" id="login-link">
+              <i class="fa-solid fa-right-to-bracket me-1"></i> Log in
+            </a>
+          </li>
+        <% } %>
+        
+        <% if (typeof currentUser !== 'undefined' && currentUser !== null) { %>
+          <!-- User Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle user-menu" href="#" id="userDropdown" role="button" 
+              data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa-solid fa-circle-user me-1"></i>
+              <span class="d-none d-md-inline">
+                <%= currentUser.username %>
+              </span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end animate__animated animate__fadeIn animate__faster shadow-sm" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="/user/profile">
+                <i class="fa-solid fa-user me-2"></i> Profile
+              </a></li>
+              <li><a class="dropdown-item" href="/user/trips">
+                <i class="fa-solid fa-suitcase me-2"></i> My Trips
+              </a></li>
+              <li><a class="dropdown-item" href="/user/listings">
+                <i class="fa-solid fa-house me-2"></i> My Listings
+              </a></li>
+              <% if (currentUser.isAdmin) { %>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/admin/dashboard">
+                <i class="fa-solid fa-gauge me-2"></i> Admin Dashboard
+              </a></li>
+              <li><a class="dropdown-item" href="/admin/categories">
+                <i class="fa-solid fa-tags me-2"></i> Manage Categories
+              </a></li>
+              <% } %>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/logout">
+                <i class="fa-solid fa-right-from-bracket me-2"></i> Logout
+              </a></li>
+            </ul>
+          </li>
+        <% } %>
+      </ul>
+    </div>
   </div>
 </nav>
 
 <script>
   // Highlight active link based on current page
-  const path = window.location.pathname;
-  if (path === '/') {
-      document.getElementById('home-link').classList.add('active');
-  } else if (path === '/listings') {
+  document.addEventListener('DOMContentLoaded', function() {
+    const path = window.location.pathname;
+    
+    if (path === '/') {
       document.getElementById('listings-link').classList.add('active');
-  } else if (path === '/listings/new') {
+    } else if (path.startsWith('/listings') && !path.includes('/new')) {
+      document.getElementById('listings-link').classList.add('active');
+    } else if (path === '/listings/new') {
       document.getElementById('newlisting-link').classList.add('active');
-  }
+    }
+    
+    // Add scroll effect to navbar
+    window.addEventListener('scroll', function() {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('navbar-scrolled');
+      } else {
+        navbar.classList.remove('navbar-scrolled');
+      }
+    });
+  });
 </script>
 
-<!-- Custom CSS -->
 <style>
-  /* Remove any active or focus state for the hamburger button */
-  .navbar-toggler:focus {
-    outline: none; /* Remove the default outline */
-    box-shadow: none; /* Remove focus box shadow */
+  /* Modern Navbar Styling */
+  .navbar {
+    background-color: var(--white);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
   }
-
-  /* Remove the 'collapsed' class active state color change */
-  .navbar-toggler.collapsed {
-    background-color: transparent; /* Ensure no color change when collapsed */
+  
+  .navbar-scrolled {
+    padding: 0.5rem 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
-
-  /* Optional: If you want the navbar items to be clearly visible and contrast well */
+  
+  .navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar-brand i {
+    font-size: 1.75rem;
+    color: var(--primary-color);
+    transition: transform 0.3s ease;
+  }
+  
+  .navbar-brand:hover i {
+    transform: rotate(30deg);
+  }
+  
+  /* Search Form */
+  .search-form {
+    max-width: 450px;
+    width: 100%;
+  }
+  
+  .search-input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border: 1px solid #ddd;
+    padding: 0.6rem 1rem;
+    box-shadow: none;
+  }
+  
+  .btn-search {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    padding: 0.6rem 1.25rem;
+  }
+  
+  .btn-search:hover {
+    background-color: #e4314c;
+  }
+  
+  /* Navigation Links */
   .navbar-nav .nav-link {
-    color: #333; /* Dark text color for better visibility */
+    color: var(--secondary-color);
+    font-weight: 500;
+    padding: 0.6rem 1rem;
+    margin: 0 0.25rem;
+    border-radius: 24px;
+    transition: all 0.3s ease;
   }
-
-  /* Optional: If you want to highlight active links (not the hamburger) */
-  .navbar-nav .nav-link.active {
-    color: #007bff; /* Active link color */
-  }
-
-  /* Navbar background color when expanded */
-  .navbar-collapse {
-    background-color: rgba(255, 255, 255, 0.9); /* Adjust dropdown background color */
-  }
-
-  /* Optional: Navbar items background color on hover */
+  
   .navbar-nav .nav-link:hover {
-    background-color: #bebebe; /* Light background on hover */
+    background-color: var(--light-gray);
   }
-
-  /* Customize the navbar-toggler icon color */
-  .navbar-toggler-icon {
-    background-color: transparent; /* Adjust the hamburger icon color */
+  
+  .navbar-nav .nav-link.active {
+    background-color: var(--light-gray);
+    font-weight: 600;
   }
-
-  /* Custom Class to move navbar to the left more */
-  .custom-left-nav {
-    margin-left: -20px;  /* Negative margin to push the navbar items further left */
+  
+  /* Host Link Styling */
+  .host-link {
+    color: var(--primary-color) !important;
+    font-weight: 600 !important;
   }
-  a#signup-link {
-    margin-left: -12px;
+  
+  .host-link:hover {
+    background-color: rgba(255, 56, 92, 0.1) !important;
   }
-  a#login-link {
-    margin-left: -10px;
+  
+  /* Login Button */
+  .login-btn {
+    background-color: var(--primary-color);
+    color: white !important;
   }
-  a#logout-link {
-    margin-left: -9px;
-}
-
+  
+  .login-btn:hover {
+    background-color: #e4314c !important;
+    color: white !important;
+  }
+  
+  /* User Menu Dropdown */
+  .user-menu {
+    display: flex;
+    align-items: center;
+    background-color: var(--light-gray);
+    border-radius: 24px;
+    padding: 0.5rem 1rem !important;
+  }
+  
+  .dropdown-menu {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #eee;
+    padding: 0.5rem;
+    min-width: 220px;
+  }
+  
+  .dropdown-item {
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    color: var(--secondary-color);
+  }
+  
+  .dropdown-item:hover {
+    background-color: var(--light-gray);
+  }
+  
+  .dropdown-item i {
+    color: var(--dark-gray);
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 991px) {
+    .search-form {
+      margin: 1rem 0;
+      max-width: 100%;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .navbar {
+      padding: 0.75rem 1rem;
+    }
+    
+    .navbar-brand span {
+      display: none;
+    }
+    
+    .navbar-nav {
+      margin-top: 1rem;
+    }
+    
+    .dropdown-menu {
+      border: none;
+      box-shadow: none;
+      padding-left: 1rem;
+    }
+  }
 </style>

@@ -1,93 +1,312 @@
 <% layout('/layouts/boilerplate') -%>
-<body>
-    <!-- Container for centering and responsive design -->
-    <div class="container">
-        <div class="row justify-content-center">
-            <!-- Form Column, centered and with appropriate width -->
-            <div class="col-12 col-md-10 col-lg-8">
-                <!-- Form Title -->
-                <h3 class="text-center mb-4">Create a New Listing</h3>
-                
-                <!-- Form Start -->
-                <form action="/listings" method="POST" novalidate class="needs-validation" enctype="multipart/form-data">
-                    
-                    <!-- Title Input Field -->
-                    <div class="mb-3">
-                        <label for="title" class="form-label">Title</label>
-                        <input name="listing[title]" id="title" class="form-control" placeholder="Enter title" type="text" required>
-                        <div class="valid-feedback">Title looks good!</div>
-                        <div class="invalid-feedback">Please enter a title.</div>
-                    </div>
 
-                    <!-- Description Input Field -->
-                    <div class="mb-4">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea name="listing[description]" id="description" placeholder="Enter description" class="form-control" rows="5" required></textarea>
-                        <div class="valid-feedback">Description looks good!</div>
-                        <div class="invalid-feedback">Please enter a description.</div>
-                    </div>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <div class="card shadow listing-form-card">
+                <div class="card-body p-4 p-md-5">
+                    <!-- Form Title -->
+                    <h2 class="text-center mb-4 form-title">Create a New Listing</h2>
+                    <p class="text-center text-muted mb-4">Share your space with travelers around the world</p>
                     
-                    <!-- Image URL Input Field -->
-                    <div class="mb-4">
-                        <label for="image" class="form-label">Upload image</label>
-                        <input class="form-control" name="listing[image][url]" id="image"  type="file">
-                    </div>
-                    
-                    <!-- Price and Country Input Fields -->
-                    <div class="row mb-4">
-                        <div class="mb-3 col-12 col-md-6">
-                            <label for="price" class="form-label">Price</label>
-                            <div class="input-group">
-                                <span class="input-group-text">&#8377;</span>
-                                <input name="listing[price]" id="price" class="form-control" placeholder="Enter price"  min="0" step="100" required>
-                                <div class="valid-feedback">Price looks good!</div>
-                                <div class="invalid-feedback">Please enter a price.</div>
+                    <!-- Form Start -->
+                    <form action="/listings" method="POST" novalidate class="needs-validation" enctype="multipart/form-data">
+                        
+                        <!-- Title Input Field -->
+                        <div class="form-floating mb-4 animate-field">
+                            <input name="listing[title]" id="title" class="form-control" placeholder="Enter title" type="text" required>
+                            <label for="title">Title</label>
+                            <div class="valid-feedback">Title looks good!</div>
+                            <div class="invalid-feedback">Please enter a title.</div>
+                        </div>
+    
+                        <!-- Description Input Field -->
+                        <div class="form-floating mb-4 animate-field">
+                            <textarea name="listing[description]" id="description" placeholder="Enter description" class="form-control" style="height: 150px" required></textarea>
+                            <label for="description">Description</label>
+                            <div class="valid-feedback">Description looks good!</div>
+                            <div class="invalid-feedback">Please enter a description.</div>
+                        </div>
+                        
+                        <!-- Categories Selection -->
+                        <div class="mb-4 animate-field">
+                            <label for="categories" class="form-label">Categories</label>
+                            <select name="listing[categories][]" class="form-select" id="categories" multiple data-mdb-clear-button="true">
+                                <option value="trending">Trending</option>
+                                <option value="rooms">Rooms</option>
+                                <option value="cities">Iconic Cities</option>
+                                <option value="mountains">Mountains</option>
+                                <option value="castles">Castles</option>
+                                <option value="arctic">Arctic</option>
+                                <option value="camping">Camping</option>
+                                <option value="farms">Farms</option>
+                            </select>
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Select multiple categories by clicking multiple items or holding Ctrl/Cmd while clicking
                             </div>
-
                         </div>
-                        <div class="mb-3 col-12 col-md-6">
-                            <label for="country" class="form-label">Country</label>
-                            <input name="listing[country]" id="country" class="form-control" placeholder="Enter country" type="text" required>
-                            <div class="valid-feedback">Country looks good!</div>
-                            <div class="invalid-feedback">Please enter a country.</div>
+                        
+                        <!-- Image Upload Field with Preview -->
+                        <div class="mb-4 animate-field">
+                            <label for="image" class="form-label">Upload Image</label>
+                            <div class="image-upload-container">
+                                <input class="form-control" name="listing[image][url]" id="image" type="file" accept="image/*" onchange="previewImage(event)">
+                                <div id="image-preview" class="mt-3 d-none">
+                                    <img src="" alt="Preview" class="img-thumbnail" style="max-height: 200px">
+                                </div>
+                            </div>
                         </div>
-                    </div>
-
-                    <!-- Location Input Field -->
-                    <div class="mb-4">
-                        <label for="location" class="form-label">Location</label>
-                        <input name="listing[location]" id="location" class="form-control" placeholder="Enter location" type="text" required>
-                        <div class="valid-feedback">Location looks good!</div>
-                        <div class="invalid-feedback">Please enter a location.</div>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-primary btn-lg" type="submit">Add Listing</button>
-                    </div>
-                </form>
+                        
+                        <!-- Price and Country Input Fields -->
+                        <div class="row mb-4">
+                            <div class="col-md-6 mb-3 mb-md-0 animate-field">
+                                <div class="form-floating">
+                                    <input name="listing[price]" id="price" class="form-control" placeholder="Enter price" min="0" step="100" type="number" required>
+                                    <label for="price">Price (₹)</label>
+                                </div>
+                                <div class="valid-feedback">Price looks good!</div>
+                                <div class="invalid-feedback">Please enter a valid price.</div>
+                            </div>
+                            <div class="col-md-6 animate-field">
+                                <div class="form-floating">
+                                    <input name="listing[country]" id="country" class="form-control" placeholder="Enter country" type="text" required>
+                                    <label for="country">Country</label>
+                                </div>
+                                <div class="valid-feedback">Country looks good!</div>
+                                <div class="invalid-feedback">Please enter a country.</div>
+                            </div>
+                        </div>
+    
+                        <!-- Location Input Field -->
+                        <div class="form-floating mb-4 animate-field">
+                            <input name="listing[location]" id="location" class="form-control" placeholder="Enter location" type="text" required>
+                            <label for="location">Location</label>
+                            <div class="valid-feedback">Location looks good!</div>
+                            <div class="invalid-feedback">Please enter a location.</div>
+                        </div>
+    
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2 mt-5">
+                            <button class="btn btn-primary btn-lg create-btn" type="submit">
+                                <span>Create Listing</span>
+                                <i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- <script>
-        (() => {
-            'use strict'
+<!-- Add Select2 CSS and JS for better multi-select -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    // Initialize Select2
+    $(document).ready(function() {
+        $('#categories').select2({
+            placeholder: 'Select categories',
+            closeOnSelect: false,
+            allowClear: true,
+            width: '100%',
+            theme: "classic"
+        });
         
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            const forms = document.querySelectorAll('.needs-validation')
+        console.log("Select2 initialized for categories on new listing form");
+    });
+
+    // Image preview function
+    function previewImage(event) {
+        const input = event.target;
+        const preview = document.getElementById('image-preview');
         
-            // Loop over them and prevent submission
-            Array.from(forms).forEach(form => {
-                form.addEventListener('submit', event => {
-                    if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
-                    }
-        
-                    form.classList.add('was-validated')
-                }, false)
-            })
-        })()
-    </script> -->
-</body>
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                preview.querySelector('img').src = e.target.result;
+                preview.classList.remove('d-none');
+            };
+            
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Form validation
+    (() => {
+        'use strict'
+    
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll('.needs-validation')
+    
+        // Loop over them and prevent submission
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+    
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+</script>
+
+<style>
+    /* Modern form styling */
+    .listing-form-card {
+        border: none;
+        border-radius: var(--border-radius);
+        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+        transition: var(--transition);
+        overflow: hidden;
+    }
+    
+    .listing-form-card:hover {
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+        transform: translateY(-5px);
+    }
+    
+    .form-title {
+        font-weight: 700;
+        color: var(--secondary-color);
+        margin-bottom: 2rem;
+        position: relative;
+    }
+    
+    .form-title:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 3px;
+        background-color: var(--primary-color);
+        border-radius: 3px;
+    }
+    
+    /* Animation for form fields */
+    .animate-field {
+        transform: translateY(20px);
+        opacity: 0;
+        animation: fadeInUp 0.5s forwards;
+    }
+    
+    @keyframes fadeInUp {
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    
+    .animate-field:nth-child(1) { animation-delay: 0.1s; }
+    .animate-field:nth-child(2) { animation-delay: 0.2s; }
+    .animate-field:nth-child(3) { animation-delay: 0.3s; }
+    .animate-field:nth-child(4) { animation-delay: 0.4s; }
+    .animate-field:nth-child(5) { animation-delay: 0.5s; }
+    .animate-field:nth-child(6) { animation-delay: 0.6s; }
+    
+    /* Form control styling */
+    .form-control, .form-select {
+        padding: 0.8rem 1rem;
+        border: 1px solid #e0e0e0;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(255, 56, 92, 0.2);
+    }
+    
+    /* Custom styling for Select2 */
+    .select2-container--default .select2-selection--multiple {
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+        padding: 5px;
+        min-height: 58px;
+    }
+    
+    .select2-container--default.select2-container--focus .select2-selection--multiple {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(255, 56, 92, 0.2);
+    }
+    
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 5px 10px;
+        margin: 3px;
+    }
+    
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+        color: white;
+        margin-right: 5px;
+    }
+    
+    /* Submit button styling */
+    .create-btn {
+        background-color: var(--primary-color);
+        border: none;
+        padding: 1rem 1.5rem;
+        font-weight: 600;
+        border-radius: 30px;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+        transition: all 0.4s ease;
+    }
+    
+    .create-btn:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.1);
+        z-index: -1;
+        transition: all 0.4s ease;
+    }
+    
+    .create-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 7px 15px rgba(255, 56, 92, 0.3);
+    }
+    
+    .create-btn:hover:before {
+        width: 100%;
+    }
+    
+    /* Image preview styling */
+    #image-preview {
+        transition: all 0.3s ease;
+        transform: scale(0.95);
+        opacity: 0.9;
+    }
+    
+    #image-preview:hover {
+        transform: scale(1);
+        opacity: 1;
+    }
+    
+    /* Form floating labels */
+    .form-floating label {
+        padding: 1rem;
+    }
+    
+    .form-floating>.form-control, 
+    .form-floating>.form-select {
+        height: 58px;
+    }
+    
+    .form-floating textarea.form-control {
+        height: 150px;
+    }
+</style>
